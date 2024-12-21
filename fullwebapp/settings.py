@@ -42,6 +42,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
+    'cacheops',
 ]
 
 CUSTOM_APPS = [
@@ -162,3 +163,23 @@ REST_FRAMEWORK = {
 
 # AUTH_USER_MODEL = "user.CustomUser"
 
+
+# REDIS settings
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Use the appropriate Redis server URL
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+CACHEOPS_REDIS = {
+    "host": "localhost",  # Redis endpoint
+    "port": 6379,  # for redis lab, port is 15014
+    'db': 1,
+    "socket_timeout": 3,  # connection timeout in seconds, optional
+    # "password": "<REDIS_PASSWORD>",
+}

@@ -8,4 +8,5 @@ urlpatterns = [
     path('', views.BlogGetCreateView.as_view()),
     path('create-list/', views.BlogGetUpdateView.as_view()),
     path('filter/', views.BlogGetUpdateFilterView.as_view()),
+    path('cached/', views.get_blogs_by_author),
 ]

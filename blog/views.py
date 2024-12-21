@@ -8,6 +8,9 @@ from blog import models
 from rest_framework import status
 from rest_framework import generics
 from rest_framework import filters
+from cacheops import cached
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
 
 
 # Functional views
@@ -79,3 +82,29 @@ def blog_view(request):
     # perform operation
 
 
+@cached(timeout=60*10)
+def get_all_blogs(author_id):
+    print('Fetching blogs from database')
+    blogs = models.Blog.objects.filter(author_id=author_id)
+    blogs_data = serializers.BlogSerializer(blogs, many=True).data
+    return blogs_data
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_blogs_by_author(request):
+    author_id = request.GET.get('author_id')
+    blogs = get_all_blogs(author_id)
+    return Response({'blogs': blogs})
+
+
+# Use cached_as decorator whenever you want to implement 
+# the auto invalidation of cached results on any data source update. 
+# For example, if we want to invalidate cache on any blog table update, 
+# we should use the cached_as decorator and pass the model name Blog 
+# as a parameter:
+
+from cacheops import cached_as
+@cached_as(models.Blog, timeout=15*60)
+def get_all_blogs(author_id):
+    blogs = models.Blog.objects.filter(author_id=author_id)
+    return list(blogs)
