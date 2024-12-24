@@ -11,6 +11,8 @@ from rest_framework import filters
 from cacheops import cached
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny
+from rest_framework.throttling import AnonRateThrottle
+from rest_framework.throttling import ScopedRateThrottle
 
 
 # Functional views
@@ -108,3 +110,24 @@ from cacheops import cached_as
 def get_all_blogs(author_id):
     blogs = models.Blog.objects.filter(author_id=author_id)
     return list(blogs)
+
+
+# USing throttle class
+class BlogApiView(APIView):
+    throttle_classes = [AnonRateThrottle]
+    ...
+
+
+class BlogApiView2(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throtlle_scope = 'blog_limit'
+
+
+class BlogDetailApiView(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throtlle_scope = 'blog_limit'
+
+
+class Blog2ApiView(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'blog_2_limit'

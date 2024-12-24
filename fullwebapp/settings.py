@@ -153,11 +153,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning', # For URL Path versionning eg: GET /v1/bookings/
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',        # Type of authentication: Token authentication
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ]
+        'rest_framework.permissions.IsAuthenticated',       # Permission 
+    ],
+    'DEFAULT THROTTLE_RATES': {
+        'anon': '100/day', # non-logged-in user 
+        'user': '1000/day',
+        'scope': '1000/day', # Implement throttling to specific APIs clubbed together
+        'blog_limit': '1000/day',
+        'blog_2_limit': '100/day'
+    }
 }
 
 
@@ -165,6 +172,13 @@ REST_FRAMEWORK = {
 
 
 # REDIS settings
+# curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+# echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+# sudo apt update
+# sudo apt install redis
+# sudo systemctl enable redis-server.service
+# sudo systemctl start redis-server.service
+# sudo systemctl status redis-server.service
 
 CACHES = {
     'default': {
