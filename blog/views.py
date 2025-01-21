@@ -14,6 +14,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.throttling import ScopedRateThrottle
 
+# include logging function
+from common.logging_util import log_event_
+
 
 # Functional views
 @api_view(['GET'])
@@ -95,6 +98,8 @@ def get_all_blogs(author_id):
 @permission_classes([AllowAny])
 def get_blogs_by_author(request):
     author_id = request.GET.get('author_id')
+    # include logging event
+    log_event_('get_blogs_by_author', {'author_id': author_id})
     blogs = get_all_blogs(author_id)
     return Response({'blogs': blogs})
 

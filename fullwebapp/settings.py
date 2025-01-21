@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -63,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'common.localthread_middleware.PopulateLocalsThreadMiddleware', # custom middleware
 ]
 
 ROOT_URLCONF = 'fullwebapp.urls'
@@ -196,4 +198,37 @@ CACHEOPS_REDIS = {
     'db': 1,
     "socket_timeout": 3,  # connection timeout in seconds, optional
     # "password": "<REDIS_PASSWORD>",
+}
+
+CACHEOPS = {
+    'blog.blog': {'ops': 'all', 'timeout': 60 * 60},  # Cache all operations for 1 hour
+}
+
+
+
+# Logging settings
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(asctime)s %(process)d %(thread)d %(message)s"
+        }
+    },
+    "handlers": {
+        "django_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, "common/logs/django_logs.log"),
+            "maxBytes": 10485760, #1024 * 1024 * 10,  # 10MB
+            "backupCount": 10,
+            "formatter": "verbose"
+        },
+    },
+    "loggers": {
+        "django_default": {
+            "handlers": ["django_file"],
+            "level": "INFO",
+        },
+    },
 }
