@@ -9,4 +9,7 @@ urlpatterns = [
     path('create-list/', views.BlogGetUpdateView.as_view()),
     path('filter/', views.BlogGetUpdateFilterView.as_view()),
     path('cached/', views.get_blogs_by_author),
+    path('paginated/', views.get_blog_with_pagination),
+    path('publish/', views.publish_blog),
+
 ]

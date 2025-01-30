@@ -136,3 +136,28 @@ class BlogDetailApiView(APIView):
 class Blog2ApiView(APIView):
     throttle_classes = [ScopedRateThrottle]
     throttle_scope = 'blog_2_limit'
+
+
+##### Pagination part #####
+
+def get_blog_without_pagination(request):
+    blogs = models.Blog.objects.all()
+    blog_data = serializers.BlogSerializer(blogs, many=True).data
+    return Response(blog_data.data)
+
+@api_view(['GET'])
+def get_blog_with_pagination(request):
+    page = int(request.GET.get('page', 1))
+    page_size = int(request.GET.get('page_size', 10))
+    offset = (page-1) * page_size
+    limit = page * page_size
+    blogs = models.Blog.objects.all()[offset:limit]
+    blogs_data = serializers.BlogSerializer(blogs, many=True).data
+    return Response({'blogs': blogs_data})
+
+from blog import publics
+@api_view(['GET'])
+def publish_blog(request):
+    blog_id = request.GET.get('id')
+    publics.publish_blog(blog_id)
+    return Response({'status': 'success'})
