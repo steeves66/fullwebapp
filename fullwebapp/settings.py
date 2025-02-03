@@ -65,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'common.localthread_middleware.PopulateLocalsThreadMiddleware', # custom middleware
+    'common.custom_middleware.CustomMiddleware', # custom middleware
 ]
 
 ROOT_URLCONF = 'fullwebapp.urls'
