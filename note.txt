@@ -4,3 +4,6 @@ Cursor API Pagination
 Keyset API pagination
 Offset API pagination
 Time-based API pagination
+
+Based on the book 
+https://github.com/PacktPublishing/Django-in-Production/tree/main/Chapter09#setting-up-a-database-for-tests

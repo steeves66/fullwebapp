@@ -104,11 +104,15 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'HOST': 'localhost',
         'NAME': 'app_database',
+        "TEST": {
+            "NAME": "mytestdatabase",
+        },
         'USER': 'postgres',
         'PORT': 5432,
         'PASSWORD': 'admin'
     }
 }
+
 
 
 # Password validation
@@ -155,12 +159,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning', # For URL Path versionning eg: GET /v1/bookings/
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',        # Type of authentication: Token authentication
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',       # Permission 
-    ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.TokenAuthentication',        # Type of authentication: Token authentication
+    # ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',       # Permission 
+    # ],
     'DEFAULT THROTTLE_RATES': {
         'anon': '100/day', # non-logged-in user 
         'user': '1000/day',
@@ -233,3 +237,22 @@ LOGGING = {
         },
     },
 }
+
+
+# Celery settings
+# pip install celery
+# create celery.py where settings.py is located
+# REDIS is the broker
+#  CELERY is the worker
+# Launch celery
+# celery --app=fullwebapp worker --loglevel=INFO
+# celery -A fullwebapp worker --loglevel=info -P gevent
+
+REDIS_CONNECTION_STRING = "127.0.0.1:6379"
+# Use redis lab credentials
+CELERY_BROKER_URL = f"redis://{REDIS_CONNECTION_STRING}"
+CELERY_RESULT_BACKEND = f"redis://{REDIS_CONNECTION_STRING}"
+
+""" REDIS_CONNECTION_STRING = '<user>:<pass>@<endpoint>'
+'LOCATION': 'redis://127.0.0.1:6379/1', 
+'LOCATION': 'redis://<user>:<password>@<public endpoint>' """

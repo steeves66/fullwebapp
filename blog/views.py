@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from blog import serializers
@@ -145,6 +145,7 @@ def get_blog_without_pagination(request):
     blog_data = serializers.BlogSerializer(blogs, many=True).data
     return Response(blog_data.data)
 
+
 @api_view(['GET'])
 def get_blog_with_pagination(request):
     page = int(request.GET.get('page', 1))
@@ -155,9 +156,41 @@ def get_blog_with_pagination(request):
     blogs_data = serializers.BlogSerializer(blogs, many=True).data
     return Response({'blogs': blogs_data})
 
+
 from blog import publics
 @api_view(['GET'])
 def publish_blog(request):
     blog_id = request.GET.get('id')
     publics.publish_blog(blog_id)
     return Response({'status': 'success'})
+
+
+# Using celery, redis and django
+from fullwebapp.celery import debug_task
+@api_view(['GET'])
+def verify_blog(request):
+    verify_word = request.GET.get('verify_word')
+    debug_task.delay(f"Celery Task verification: {verify_word}")
+    return Response({'status': 'success'})
+
+
+# from blog import tasks
+# def publish_blo(request):
+#     blog = save_blog(request)
+#     # publish blog code
+#     tasks.send_email_to_followers.delay(blog.author_id, blog.id)
+
+
+@api_view(['GET'])
+def basic_req(request):
+    if request.method == 'GET':
+        resp = {"msg": "hello world"}
+        return Response(data=resp, status=status.HTTP_200_OK)
+    
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def hello_world_2(request):
+    resp = {"msg": "hello world!"}
+    return Response(data=resp, status=status.HTTP_200_OK)

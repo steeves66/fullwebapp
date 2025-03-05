@@ -11,5 +11,6 @@ urlpatterns = [
     path('cached/', views.get_blogs_by_author),
     path('paginated/', views.get_blog_with_pagination),
     path('publish/', views.publish_blog),
-
+    path('verify/', views.verify_blog),
+    path('hello-world/', views.basic_req)
 ]
