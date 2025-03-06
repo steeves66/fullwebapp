@@ -1,3 +1,33 @@
+///////////////////////////////////////// system section
+----------------- git
+git add .
+git commit -m "message'
+git push
+
+
+------------------ python
+# create environment and activate
+python -m venv .venv
+source env/bin/activate  
+# On Windows, use: env\Scripts\activate
+
+# install Django and daphne
+pip install Django
+pip install daphne
+
+# launch  daphne server
+daphne myapp.asgi:application
+
+# create requirements file
+py -m pip freeze > requirements.txt 
+
+
+
+
+
+
+
+///////////////////////////////////////// django section
 # Pagination
 
 Cursor API Pagination
@@ -7,3 +37,42 @@ Time-based API pagination
 
 Based on the book 
 https://github.com/PacktPublishing/Django-in-Production/tree/main/Chapter09#setting-up-a-database-for-tests
+
+
+Different file settings for different purpose
+settings/base.py
+settings/dev.py
+settings/local.py
+settings/prod.py
+
+** In unix server you can do:
+export DJANGO_SETTINGS_MODULE = fullwebapp.settings.local
+
+** In command line you can do:
+python manage.py runserver --settings=fullwebapp.settings.local
+
+Configuring Django for production
+In this section, we will learn about a few key configurations we need to set before deploying to production. We will first discuss the configuration we need to update the settings.py file:
+
+Update the SECRET_KEY value and pass it via the environment variable
+Set DEBUG = False for production so that sensitive information via an error stacktrace is not shown, whenever there is an error in the Django app
+Set ALLOWED_HOSTS = ["dip.com", "xyz.com"], and list all the domains that the Django project would be served on
+Set APPEND_SLASH = True so that if any request is missing a slash at the end, Django can add a slash automatically
+Set TIME_ZONE appropriately
+Change the Django admin path from /admin to something that is non-guessable
+Always use timezone.now() for any time-related operation
+
+
+
+
+
+
+
+********************* Django for production
+-------- install gunicorm
+pip install gunicorn
+
+--------- Start the gunicorn server with the WSGI file. Make sure you are running the following command from the same path where the manage.py file lives:
+gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers=4 --max-requests=512 --max-requests-jitter=64 
+
+

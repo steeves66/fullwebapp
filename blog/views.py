@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from rest_framework.decorators import api_view, authentication_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from blog import serializers
@@ -194,3 +196,22 @@ def basic_req(request):
 def hello_world_2(request):
     resp = {"msg": "hello world!"}
     return Response(data=resp, status=status.HTTP_200_OK)
+
+
+""" 
+write good error code
+"""
+@api_view(['GET'])
+def get_blog_by_id(blog_id):
+    try:
+        blog = models.Blog.objects.get(id=blog_id)
+    except blog.DoesNotExist:
+        return Response(
+            status=status.HTTP_404_NOT_FOUND,
+            data={
+                "error": "Blog does not exist",
+                "error_code": 'BLG0012'
+                }
+            )
+    blog_data = serializers.BlogSerializer(blog).data
+    return Response(blog_data)

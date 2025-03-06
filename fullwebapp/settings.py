@@ -44,6 +44,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'cacheops',
+    'corsheaders',
 ]
 
 CUSTOM_APPS = [
@@ -59,6 +60,7 @@ INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware', # for cors header
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -256,3 +258,10 @@ CELERY_RESULT_BACKEND = f"redis://{REDIS_CONNECTION_STRING}"
 """ REDIS_CONNECTION_STRING = '<user>:<pass>@<endpoint>'
 'LOCATION': 'redis://127.0.0.1:6379/1', 
 'LOCATION': 'redis://<user>:<password>@<public endpoint>' """
+
+
+CORS_ALLOWED_ORIGINS = [
+    "https://example.com",
+    "https://sub.example.com",
+    "http://127.0.0.1:9000",
+]
